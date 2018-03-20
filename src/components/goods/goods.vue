@@ -6,7 +6,7 @@
 	   			<!--$event解决在APP端点击正常在PC端点击出现两次情况-->
 	   			<!--'current':currentIndex===index 意思是当两个index相等的时候 就赋class current 为高亮-->
 	   			<!--selectMenu点击滚动事件-->
-	   			<li v-for="(item,index) in goods" class="menu-item" :class="{'current':currentIndex===index}" @click="selectMenu(index,$event)">
+	   			<li v-for="(item,index) in goods" class="menu-item" :class="{'current':currentIndex===index}" @click="selectMenu(index,$event)" ref="menuList">
 	   				<span class="text border-1px">
 	   					<span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>{{item.name}}
 	   				</span>
@@ -77,6 +77,7 @@
     				let height2 = this.ListHeight[i + 1];//下一个索引值的高度  低点
     				//是>= 默认第一个是高亮 向下的闭区间>= 一开始就是o 否则不会跟着滚动
     				if(!height2 || ( this.scrollY >= height1 && this.scrollY < height2)) {
+    					this._followScroll(i);
     					return i;//最后一个 或者当前区间则返回索引
     				}
     			}
@@ -163,7 +164,12 @@
 			   		height += item.clientHeight;//clientHeight接口 对区间的统计 可理解为内部可视区高度,样式的height+上下padding
 			   		this.ListHeight.push(height);
 			   	}
-		    }
+		    },
+		    _followScroll(index) {
+		        let menuList = this.$refs.menuList;
+		        let el = menuList[index];
+		        this.meunScroll.scrollToElement(el, 300, 0, -100);
+      		}
 		},
 		components: {
 			shopcart,

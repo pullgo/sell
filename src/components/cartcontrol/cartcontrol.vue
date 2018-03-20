@@ -74,11 +74,11 @@
         line-height: 24px
         font-size: 24px
         color: rgba(0, 160, 220, 0.5)
-        transition: all 0.05s linear
+        transition: all 3s linear
         transfrom: rotate(0)
       &.move-enter-active, &.move-leave-active
         opacity: 1
-        transition: all 0.4s linear
+        transition: all 3s linear
       &.move-enter, &.move-leave-active// 移除动画和开始动画
         opacity: 0
         transform: translate3d(24px, 0, 0)//x轴滚过去

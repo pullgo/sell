@@ -22,7 +22,7 @@
       <!--购物车小球飞的效果-->
       <div class="ball-container">
         <div v-for="ball in balls">
-          <transition name="drop" @before-enter="beforeDrop" @enter="dropping" @after-enter="afterDrop">
+          <transition name="drop">
             <div class="ball" v-show="ball.show">
               <div class="inner inner-hook"></div>
             </div>
@@ -199,49 +199,48 @@
       addFood(target) {
         this.drop(target);
       },   
-      transitions: {
-        beforeDrop(el) {//找到为true的小球
-          let count = this.balls.length;
-          while (count--) {
-            let ball = this.balls[count];
-            if (ball.show) {
-             //getBoundingClientRect浏览器接口 浏览器视口偏移
-              let rect = ball.el.getBoundingClientRect();
-              let x = rect.left - 32; //正向值
-              //innerHeight窗口的高度
-              let y = -(window.innerHeight - rect.top - 22);//y是负值
-              //让其显示 在计算初始位置 外层做纵向动画 内层做横向动画
-              el.style.display = '';//初始位置 先display '' 让其显示
-              el.style.webkitTransform = `translate3d(0,${y}px,0)`;//纵向动画
-              el.style.transform = `translate3d(0,${y}px,0)`;//横向动画
-              let inner = el.getElementsByClassName('inner-hook')[0];//inner-hook 表示用来选择的 没有正式的含义
+      beforeDrop(el) {//找到为true的小球
+        let count = this.balls.length;
+        while (count--) {
+          let ball = this.balls[count];
+          if (ball.show) {
+           //getBoundingClientRect浏览器接口 浏览器视口偏移
+            let rect = ball.el.getBoundingClientRect();
+            let x = rect.left - 32; //正向值
+            //innerHeight窗口的高度
+            let y = -(window.innerHeight - rect.top - 22);//y是负值
+            //让其显示 在计算初始位置 外层做纵向动画 内层做横向动画
+            el.style.display = '';//初始位置 先display '' 让其显示
+            el.style.webkitTransform = `translate3d(0,${y}px,0)`;//纵向动画
+            el.style.transform = `translate3d(0,${y}px,0)`;//横向动画
+            let inner = el.getElementsByClassName('inner-hook')[0];//inner-hook 表示用来选择的 没有正式的含义
 
-              inner.style.webkitTransform = `translate3d(${x}px,0,0)`;//横向
-              inner.style.transform = `translate3d(${x}px,0,0)`;
-            }
-          }
-        },
-        //小球进入的状态
-        dropping(el, done) {
-          /* eslint-disable no-unused-vars */
-          let rf = el.offsetHeight;//必须浏览器重构 在加注释
-          this.$nextTick(() => {//激活
-            el.style.webkitTransform = 'translate3d(0,0,0)';//没有变量的时候 单纯字符串不要引号 报错的 需要用单引号
-            el.style.transform = 'translate3d(0,0,0)';
-            let inner = el.getElementsByClassName('inner-hook')[0];
-            inner.style.webkitTransform = 'translate3d(0,0,0)';
-            inner.style.transform = 'translate3d(0,0,0)';
-            el.addEventListener('transitionend', done);
-          });
-        },
-        afterDrop(el) {
-          let ball = this.dropBalls.shift();
-          if (ball) {//重置状态 再次利用
-            ball.show = false;
-            el.style.display = 'none';
+            inner.style.webkitTransform = `translate3d(${x}px,0,0)`;//横向
+            inner.style.transform = `translate3d(${x}px,0,0)`;
           }
         }
+      },
+      //小球进入的状态
+      dropping(el, done) {
+        /* eslint-disable no-unused-vars */
+        let rf = el.offsetHeight;//必须浏览器重构 在加注释
+        this.$nextTick(() => {//激活
+          el.style.webkitTransform = 'translate3d(0,0,0)';//没有变量的时候 单纯字符串不要引号 报错的 需要用单引号
+          el.style.transform = 'translate3d(0,0,0)';
+          let inner = el.getElementsByClassName('inner-hook')[0];
+          inner.style.webkitTransform = 'translate3d(0,0,0)';
+          inner.style.transform = 'translate3d(0,0,0)';
+          el.addEventListener('transitionend', done);
+        });
+      },
+      afterDrop(el) {
+        let ball = this.dropBalls.shift();
+        if (ball) {//重置状态 再次利用
+          ball.show = false;
+          el.style.display = 'none';
+        }
       }
+  
     },
     components: {
       cartcontrol

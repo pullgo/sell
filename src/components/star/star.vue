@@ -60,6 +60,8 @@
 		&.star-48
 			background-size: 20px 20px
 			.star-item
+				width: 20px
+				height: 20px
 				margin-right: 22px
 				background-size: 20px 20px
 				&:last-child
